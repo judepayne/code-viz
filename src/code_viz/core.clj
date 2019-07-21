@@ -135,18 +135,6 @@
       (throw (IllegalArgumentException. ^String (str "Graphviz!: "(format-error s' err)))))))
 
 
-(defn path->svg
-  "convert the path (specified as a string) to an svg representation"
-  ([path filename] (path->svg path filename "dot" []))
-  ([path filename graphviz-path] (path->svg path filename graphviz-path []))
-  ([path filename graphviz-path exclusions]
-   (spit filename
-         (-> (path->dot path exclusions)
-             (dot->svg graphviz-path)))))
-
-
-;; -------------------------The problem in hand----------------------
-
 (def dot-regex #"\.(.*)")
 (def resources-regex #"resources")
 (def a-regex #"a(.*)")
@@ -158,7 +146,15 @@
 (def ^:dynamic *exclusions* [dot-regex resources-regex classes-regex target-regex
                    node-regex bower-regex])
 
-;(path->svg "/Users/jude/Documents/clojure" "clojure.svg" *exclusions*)
+
+(defn path->svg
+  "convert the path (specified as a string) to an svg representation"
+  ([path filename] (path->svg path filename "dot" []))
+  ([path filename graphviz-path] (path->svg path filename graphviz-path []))
+  ([path filename graphviz-path exclusions]
+   (spit filename
+         (-> (path->dot path exclusions)
+             (dot->svg graphviz-path)))))
 
 
 (defn file->exclusions
@@ -192,7 +188,6 @@
                                     "of folder names to exclude when a regex is matched.")
               :default "exclusions" :flag false :parse-fn identity]
              )]
-    (println opts)
     (cond
       (or (:help opts) (missing-required? opts)) (println banner)
       :else (do (path->svg (:path opts)
