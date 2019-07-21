@@ -9,7 +9,6 @@
   (:gen-class))
 
 
-;(use 'rhizome.viz)
 (use 'rhizome.dot)
 
 
@@ -105,13 +104,15 @@
   "convert the path (specified as a string) to a dot format"
   ([path] (path->dot path []))
   ([path exclusions]
-   (tree->dot #(branch-dir? % exclusions)
-              (fn [^File x] (filter (fn [^File d] (.isDirectory d)) (.listFiles x)))
-              (clojure.java.io/file path)
-              :node->descriptor (fn [n] (label n exclusions))
-              :edge->descriptor (fn [s ^File e]
-                                  {:label (if (.isDirectory e) (pretty-path e))})
-              :options {:dpi 60 :fontsize 8})))
+   (if (.isDirectory (clojure.java.io/file path))
+     (tree->dot #(branch-dir? % exclusions)
+                (fn [^File x] (filter (fn [^File d] (.isDirectory d)) (.listFiles x)))
+                (clojure.java.io/file path)
+                :node->descriptor (fn [n] (label n exclusions))
+                :edge->descriptor (fn [s ^File e]
+                                    {:label (if (.isDirectory e) (pretty-path e))})
+                :options {:dpi 60 :fontsize 8})
+     (throw (Exception. (str path " is not a valid directory!"))))))
 
 
 (defn- format-error [s err]
@@ -152,9 +153,10 @@
   ([path filename] (path->svg path filename "dot" []))
   ([path filename graphviz-path] (path->svg path filename graphviz-path []))
   ([path filename graphviz-path exclusions]
-   (spit filename
-         (-> (path->dot path exclusions)
-             (dot->svg graphviz-path)))))
+   (try (spit filename
+              (-> (path->dot path exclusions)
+                  (dot->svg graphviz-path)))
+        (catch Exception e (println (.getMessage e))))))
 
 
 (defn file->exclusions
