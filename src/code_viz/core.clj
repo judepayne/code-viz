@@ -160,9 +160,14 @@
 
 
 (defn file->exclusions
-  [^File file]
-  (let [lines (str/split-lines (slurp file))]
-    (mapv re-pattern lines)))
+  [file]
+  (if (= file "")
+    []
+    (try
+      (let [lines (str/split-lines (slurp file))]
+        (mapv re-pattern lines))
+      (catch Exception e
+        (println (str file " is not a valid exclusions file!"))))))
 
 
 (def required-opts #{})
@@ -188,7 +193,7 @@
              ["-e" "--exclude" (str "The path of file of the exclusions file. "
                                     "The exclusions files is a set of regexes (one per line) "
                                     "of folder names to exclude when a regex is matched.")
-              :default "exclusions" :flag false :parse-fn identity]
+              :default "" :flag false :parse-fn identity]
              )]
     (cond
       (or (:help opts) (missing-required? opts)) (println banner)

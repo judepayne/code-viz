@@ -9,7 +9,7 @@ This command line tool/ clojure library will crawl a specified source directory 
 
 ## Usage
 
-*Note* This tool requires graphviz to be installed on your computer.
+**Note** This tool requires graphviz to be installed on your computer.
 
 #### As a commmand line tool
 
@@ -30,6 +30,9 @@ In the `target` directory are sub dirs for `mac` and for `windows`. Within each 
 Use as follows (e.g. the `mac` one)
 
     ./target/mac/code-viz -h
+    
+    
+*exclusions* Please see the `exclusions` file at the top level of this repo for an example of how to exclude directories from the traversal.
 
 
 #### As a Clojure library
