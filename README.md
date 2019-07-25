@@ -32,7 +32,7 @@ Use as follows (e.g. the `mac` one)
     ./target/mac/code-viz -h
     
     
-*exclusions* Please see the `exclusions` file at the top level of this repo for an example of how to exclude directories from the traversal.
+*exclusions* Please see the `exclusions` file at the top level of this repo for an example of how to exclude certain directories from the traversal.
 
 
 #### As a Clojure library
