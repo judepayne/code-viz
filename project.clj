@@ -7,7 +7,7 @@
                  [rhizome "0.2.7"]
                  [org.clojure/tools.cli "0.4.2"]]
 
-  :plugins [[judepayne/lein-native-image "0.3.1-SNAPSHOT"]]
+  :plugins [[io.taylorwood/lein-native-image "0.3.1-SNAPSHOT"]]
   
   :main code-viz.core
   :aot [code-viz.core]
